@@ -33,7 +33,8 @@ def get_bar_params(bar, longitude, latitude):
 
 
 if __name__ == '__main__':
-    bars = load_data('data-2897-2016-11-23.json')
+    path = input('input data path: ')
+    bars = load_data(path)
     sorted_bars = sorted(bars, key=lambda x: x['SeatsCount'])
     get_biggest_bar(sorted_bars)
     get_smallest_bar(sorted_bars)
