@@ -7,7 +7,7 @@ import chardet
 def load_data(my_json_path):
     if not os.path.exists(my_json_path):
         raise Exception("file not found!")
-    encoding = get_encoding(filepath)
+    encoding = get_encoding(my_json_path)
     with open(my_json_path, 'r', encoding=encoding) as file:
         return json.load(file)
 
@@ -48,24 +48,9 @@ def get_bar_params(bar, my_longitude, my_latitude):
 
 
 if __name__ == '__main__':
-    filepath = input('input data path: ')
-    bars = load_data(filepath)
+    json_path = input('input data path: ')
+    bars = load_data(json_path)
     sorted_bars = sorted(bars, key=lambda x: x['SeatsCount'])
     get_biggest_bar(sorted_bars)
     get_smallest_bar(sorted_bars)
-
-    try:
-        longitude = float(input('input your longitude: '))
-    except ValueError:
-        longitude = None
-    if longitude is None:
-        print('wtf, dude?')
-
-    try:
-        latitude = float(input('input your latitude: '))
-    except ValueError:
-        latitude = None
-    if latitude is None:
-        print('wtf, dude?')
-
-    get_closest_bar(bars, longitude, latitude)
+    get_closest_bar(bars, input('input your longitude: '), input('input your latitude: '))
