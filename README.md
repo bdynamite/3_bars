@@ -1,6 +1,7 @@
 # Ближайшие бары
 
-[FIXME. Здесь будет описание проекта]
+Для работы скрипта необходимо скачать json-файл с барами с сайта http://data.mos.ru/opendata/7710881420-bary.
+Положить его в папку со скриптом.
 
 # Как запустить
 
@@ -11,7 +12,17 @@
 ```#!bash
 
 $ python bars.py # possibly requires call of python3 executive instead of just python
-# FIXME вывести пример ответа скрипта
+# пример ответа скрипта
+
+input data path: bars.json
+#Вводим полное имя файла с данными
+The biggest bar is "Спорт бар «Красная машина»" with 450 seats
+The smallest bar is "БАР. СОКИ" with 0 seats
+input your longitude: 50.57
+#Вводим долготу
+input your latitude: 45.98
+#Вводим ширину
+The closest bar is "Таверна"
 
 ```
 
