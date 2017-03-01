@@ -1,56 +1,54 @@
 import json
 import math
-import os
-import chardet
 
 
 def load_data(my_json_path):
-    if not os.path.exists(my_json_path):
-        raise Exception("file not found!")
-    encoding = get_encoding(my_json_path)
-    with open(my_json_path, 'r', encoding=encoding) as file:
-        return json.load(file)
-
-
-def get_encoding(path_to_file_text):
-    with open(path_to_file_text, 'rb') as source:
-        lines = source.read()
-        result = chardet.detect(lines)
-        if result['encoding'] is None:
-            raise Exception("Unknown encoding!")
-        else:
-            return result['encoding']
+    try:
+        with open(my_json_path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print('file not found!')
+        exit()
 
 
 def get_biggest_bar(data):
-    print('The biggest bar is "{}" with {} seats'.format(data[-1]['Name'], data[-1]['SeatsCount']))
+    return max(data, key=lambda x: x['SeatsCount'])
 
 
 def get_smallest_bar(data):
-    print('The smallest bar is "{}" with {} seats'.format(data[0]['Name'], data[0]['SeatsCount']))
+    return min(data, key=lambda x: x['SeatsCount'])
 
 
-def get_closest_bar(data, my_longitude, my_latitude):
-    closest_bar = get_bar_params(data[0], my_longitude, my_latitude)
-    for bar in data:
-        bar_params = get_bar_params(bar, my_longitude, my_latitude)
-        if bar_params[1] < closest_bar[1]:
-            closest_bar = bar_params
-    print('The closest bar is "{}"'.format(closest_bar[0]))
+def get_closest_bar(data):
+    return min(data, key=distance)
 
 
-def get_bar_params(bar, my_longitude, my_latitude):
-    bar_name = bar['Name']
-    coordinates = (bar['geoData']['coordinates'])
-    distance = math.sqrt(((float(coordinates[0]) - float(my_longitude)) ** 2
-                          + (float(coordinates[1]) - float(my_latitude)) ** 2))
-    return bar_name, distance
+def distance(bar):
+    bar_coordinates = bar['geoData']['coordinates']
+    return math.sqrt((bar_coordinates[0] - my_coordinates[0]) ** 2 + (bar_coordinates[1] - my_coordinates[1]) ** 2)
 
+
+def get_coordinates():
+    coordinates = input('input your longitude: '), input('input your latitude: ')
+    try:
+        return list(map(float, coordinates))
+    except ValueError:
+        print('wrong coordinates!')
+        exit()
+
+
+def print_bar(bar, feature):
+    print('The {feature} bar is "{name}" with {seats} seats'.format(name=bar['Name'],
+                                                                    seats=bar['SeatsCount'],
+                                                                    feature=feature))
 
 if __name__ == '__main__':
     json_path = input('input data path: ')
     bars = load_data(json_path)
-    sorted_bars = sorted(bars, key=lambda x: x['SeatsCount'])
-    get_biggest_bar(sorted_bars)
-    get_smallest_bar(sorted_bars)
-    get_closest_bar(bars, input('input your longitude: '), input('input your latitude: '))
+    biggest_bar = get_biggest_bar(bars)
+    print_bar(biggest_bar, 'biggest')
+    smallest_bar = get_smallest_bar(bars)
+    print_bar(smallest_bar, 'smallest')
+    my_coordinates = get_coordinates()
+    closest_bar = get_closest_bar(bars)
+    print_bar(closest_bar, 'closest')
